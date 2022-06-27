@@ -7,9 +7,30 @@ export const darkTheme = createTheme({
     secondary: {
       main: '#19857b',
     },
+
     error: {
       main: red.A400,
     },
   },
-  components: {},
+  components: {
+    MuiAppBar: {
+      defaultProps: {
+        elevation: 0,
+        position: 'sticky',
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: '#4a148c',
+        },
+      },
+    },
+    MuiIconButton: {
+      defaultProps: {},
+      styleOverrides: {
+        root: {
+          color: '#ffffff',
+        },
+      },
+    },
+  },
 })

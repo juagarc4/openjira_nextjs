@@ -1,5 +1,6 @@
-import { createTheme } from '@mui/material'
+import { createTheme, IconButton } from '@mui/material'
 import { grey, red } from '@mui/material/colors'
+import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined'
 
 export const lightTheme = createTheme({
   palette: {
@@ -17,5 +18,25 @@ export const lightTheme = createTheme({
       main: red.A400,
     },
   },
-  components: {},
+  components: {
+    MuiAppBar: {
+      defaultProps: {
+        elevation: 0,
+        position: 'sticky',
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: '#4a148c',
+        },
+      },
+    },
+    MuiIconButton: {
+      defaultProps: {},
+      styleOverrides: {
+        root: {
+          color: '#ffffff',
+        },
+      },
+    },
+  },
 })
