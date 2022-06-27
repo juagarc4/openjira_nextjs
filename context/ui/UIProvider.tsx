@@ -9,11 +9,11 @@ interface Props {
 }
 
 const UI_INITIAL_STATE: UIState = {
-  sidemeuOpen: false,
+  sidemenuOpen: false,
 }
 
 export const UIProvider: FC<Props> = ({ children }) => {
   const [state, dispatch] = useReducer(uiReducer, UI_INITIAL_STATE)
 
-  return <UIContext.Provider value={{ sidebarmenuOpen: false }}>{children}</UIContext.Provider>
+  return <UIContext.Provider value={{ sidemenuOpen: false }}>{children}</UIContext.Provider>
 }
