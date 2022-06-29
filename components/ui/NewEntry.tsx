@@ -15,6 +15,9 @@ export const NewEntry = () => {
   const onSave = () => {
     if (inputValue.length === 0) return
     addNewEntry(inputValue)
+    setIsAdding(false)
+    setITouched(false)
+    setInputValue('')
   }
   return (
     <Box sx={{ marginBottom: 2, paddingX: 1 }}>
