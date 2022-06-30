@@ -12,8 +12,8 @@ interface Props {
 }
 
 export const EntryList: FC<Props> = ({ status }) => {
-  const { entries } = useContext(EntriesContext)
-  const { isDragging } = useContext(UIContext)
+  const { entries, updateEntry } = useContext(EntriesContext)
+  const { isDragging, endDragging } = useContext(UIContext)
 
   // Memoized because i don't want fillter the array each time unless the entries change.
   const entriesByStatus = useMemo(() => entries.filter((entry) => entry.status === status), [entries])
@@ -23,6 +23,12 @@ export const EntryList: FC<Props> = ({ status }) => {
   }
   const onDropEntry = (event: DragEvent<HTMLDivElement>) => {
     const id = event.dataTransfer.getData('entry_id')
+
+    // ! say to TS that the value will always be found
+    const entry = entries.find((e) => e._id === id)!
+    entry.status = status
+    updateEntry(entry)
+    endDragging()
   }
 
   return (
