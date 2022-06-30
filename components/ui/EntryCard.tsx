@@ -1,3 +1,4 @@
+import { FC, DragEvent } from 'react'
 import { Card, CardActions, CardActionArea, CardContent, Typography } from '@mui/material'
 
 import { Entry } from 'interfaces'
@@ -6,8 +7,16 @@ interface Props {
   entry: Entry
 }
 export const EntryCard: FC<Props> = ({ entry }) => {
+  const onDragStart = (event: DragEvent) => {
+    // We can set the data to transfer
+    event.dataTransfer.setData('entry_id', entry._id)
+    // TODO: Change state to show i am doing Drag
+  }
+  const onDragEnd = () => {
+    // TODO: End of Drag
+  }
   return (
-    <Card sx={{ marginBottom: 1 }}>
+    <Card sx={{ marginBottom: 1 }} draggable onDragStart={onDragStart} onDragEnd={onDragEnd}>
       <CardActionArea>
         <CardContent>
           <Typography sx={{ whiteSpace: 'pre-line' }}>{entry.description}</Typography>
