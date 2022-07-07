@@ -17,3 +17,11 @@ mongodb://localhost:27017/openjiradb
 ## Configure env vars
 
 Rename **.env.dist** to **.env** and fill the values
+
+## Fill Db with dummy data
+
+Call:
+
+```
+http://localhost:3000/api/seed
+```
