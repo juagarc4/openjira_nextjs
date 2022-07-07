@@ -1,3 +1,5 @@
+// IMPORTANT: DO NOT SEND THIS FILE TO ANY SERVER WITH VALUABLE DATA
+
 import { db, seedData } from 'database'
 import { Entry } from 'models'
 import type { NextApiRequest, NextApiResponse } from 'next'
