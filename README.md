@@ -13,3 +13,7 @@ docker-compose up -d
 ```
 mongodb://localhost:27017/openjiradb
 ```
+
+## Configure env vars
+
+Rename **.env.dist** to **.env** and fill the values
