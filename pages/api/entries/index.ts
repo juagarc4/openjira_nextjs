@@ -11,8 +11,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
       return getEntries(res)
     case 'POST':
       return postEntry(req, res)
-    case 'PUT':
-      return updateEntry(req, res)
     default:
       return res.status(400).json({ message: 'Endpoint does not exist' })
   }

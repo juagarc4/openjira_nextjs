@@ -15,6 +15,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
   switch (req.method) {
     case 'PUT':
       return updateEntry(req, res)
+    case 'GET':
+      return getEntry(req, res)
     default:
       return res.status(400).json({ message: `Method ${req.method} does not exist or is not implemented` })
   }
@@ -55,4 +57,17 @@ const updateEntry = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     await db.disconnect()
     return res.status(400).json({ message: 'Error updating entry' })
   }
+}
+
+const getEntry = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+  const { id } = req.query
+  await db.connect()
+
+  const entry = await Entry.findById(id)
+
+  if (!entry) {
+    await db.disconnect()
+    return res.status(400).json({ message: `Entry with id ${id} does not exist` })
+  }
+  return res.status(200).json(entry)
 }
