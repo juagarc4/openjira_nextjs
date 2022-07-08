@@ -25,16 +25,34 @@ const updateEntry = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   await db.connect()
 
   const entryToUpdate = await Entry.findById(id)
+
   if (!entryToUpdate) {
     await db.disconnect()
     return res.status(400).json({ message: `Entry with id ${id} does not exist` })
   }
+
   const { description = entryToUpdate.description, status = entryToUpdate.status } = req.body
 
-  // runValidator: true => Executes validatos to check taht teh given data is allowed. For example: status in [pending, in-progress, finished]
-  // new: true => Gives back the updated entry
-  const updatedEntry = await Entry.findByIdAndUpdate(id, { description, status }, { runValidators: true, new: true })
-  // We already revied updatedEntry. Therefore it is secure to add a "!" to say TS,
-  // that it will always recive a value
-  return res.status(200).json(updatedEntry!)
+  try {
+    // Method 1: Udpate Entry
+    // runValidator: true => Executes validatos to check taht teh given data is allowed. For example: status in [pending, in-progress, finished]
+    // new: true => Returns the updated entry
+    const updatedEntry = await Entry.findByIdAndUpdate(id, { description, status }, { runValidators: true, new: true })
+
+    // Method 2: Update Entry
+    // Little more efficient, but less practical.
+    // Here we can't run validators automatically
+    // We need one line per field.
+    // entryToUpdate.description = description
+    // entryToUpdate.status = status
+    // await entryToUpdate.save()
+
+    // We already revised updatedEntry. Therefore it is secure to add a "!"
+    // to say TS that it will always recive a value
+    return res.status(200).json(updatedEntry!)
+  } catch (error) {
+    console.log({ error })
+    await db.disconnect()
+    return res.status(400).json({ message: 'Error updating entry' })
+  }
 }
