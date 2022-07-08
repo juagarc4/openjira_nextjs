@@ -1,8 +1,8 @@
 // IMPORTANT: DO NOT SEND THIS FILE TO ANY SERVER WITH VALUABLE DATA
 
+import type { NextApiRequest, NextApiResponse } from 'next'
 import { db, seedData } from 'database'
 import { Entry } from 'models'
-import type { NextApiRequest, NextApiResponse } from 'next'
 
 type Data = {
   message: string
@@ -11,7 +11,7 @@ type Data = {
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   if (process.env.NODE_ENV === 'production') {
     return res.status(401).json({
-      message: 'Access to this endpüoint forbidden in production',
+      message: 'Access to this endpoint forbidden in production',
     })
   }
 
