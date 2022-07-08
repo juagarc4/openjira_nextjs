@@ -1,4 +1,3 @@
-import { StarRateSharp } from '@mui/icons-material'
 import { Entry } from 'interfaces'
 import { EntriesState } from './'
 
