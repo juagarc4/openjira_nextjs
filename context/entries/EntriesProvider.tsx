@@ -1,7 +1,8 @@
-import { FC, ReactElement, useReducer } from 'react'
+import { FC, ReactElement, useReducer, useEffect } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { EntriesContext, entriesReducer } from './'
 import { Entry } from 'interfaces'
+import { entriesApi } from 'apis'
 
 export interface EntriesState {
   entries: Entry[]
@@ -30,6 +31,21 @@ export const EntriesProvider: FC<Props> = ({ children }) => {
   const updateEntry = (entry: Entry) => {
     dispatch({ type: '[Entry] - Entry Updated', payload: entry })
   }
+
+  //
+  const refreshEntries = async () => {
+    const { data } = await entriesApi.get<Entry[]>('/entries')
+    dispatch({ type: '[Entry] - Refresh Data', payload: data })
+  }
+
+  // We want only to execute this function once.
+  // Therefor we do not neet any dependency.
+  // We can however use the function refresEntries as dependncy if we want
+  // but in this case we have to memoize the function
+  useEffect(() => {
+    refreshEntries()
+  }, [])
+
   return (
     <EntriesContext.Provider
       value={{
