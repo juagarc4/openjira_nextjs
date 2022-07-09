@@ -18,6 +18,13 @@ mongodb://localhost:27017/openjiradb
 
 Rename **.env.dist** to **.env** and fill the values
 
+# Install needed dependencies and start next in dev mode
+
+```
+yarn
+yarn dev
+```
+
 ## Fill Db with dummy data
 
 Call:
