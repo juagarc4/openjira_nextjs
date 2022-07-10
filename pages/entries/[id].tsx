@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useMemo, useState } from 'react'
 import { Layout } from 'components/layouts'
 import {
   capitalize,
@@ -27,6 +27,9 @@ const EntryPage = () => {
   const [status, setStatus] = useState<EntryStatus>('pending')
   const [touched, setTouched] = useState(false)
 
+  // We memoize the result to avoid multiple executions of the same validation.
+  const isNotValid = useMemo(() => inputValue.length === 0 && touched, [inputValue, touched])
+
   const onInputValuedChanged = (event: ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value)
   }
@@ -38,9 +41,7 @@ const EntryPage = () => {
     setStatus(event.target.value as EntryStatus)
   }
 
-  const onSave = () => {
-    
-  }
+  const onSave = () => {}
   return (
     <Layout title='....'>
       <Grid container justifyContent='center' sx={{ marginTop: 2 }}>
@@ -56,7 +57,10 @@ const EntryPage = () => {
                 multiline
                 label='New Entry'
                 value={inputValue}
+                onBlur={() => setTouched(true)}
                 onChange={onInputValuedChanged}
+                helperText={isNotValid && 'Entry a value'}
+                error={isNotValid}
               />
               <FormControl>
                 <FormLabel>Status:</FormLabel>
@@ -68,7 +72,14 @@ const EntryPage = () => {
               </FormControl>
             </CardContent>
             <CardActions>
-              <Button startIcon={<SaveOutlinedIcon />} variant='contained' fullWidth onClick={onSave}>
+              <Button
+                startIcon={<SaveOutlinedIcon />}
+                variant='contained'
+                fullWidth
+                onClick={onSave}
+                // We don't win anything memoizing this value. It's already in a useState.
+                disabled={inputValue.length === 0}
+              >
                 Save
               </Button>
             </CardActions>
