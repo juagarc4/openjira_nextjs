@@ -1,4 +1,5 @@
 import { FC, ReactElement, useReducer, useEffect } from 'react'
+import { useSnackbar } from 'notistack'
 import { EntriesContext, entriesReducer } from './'
 import { Entry } from 'interfaces'
 import { entriesApi } from 'apis'
@@ -16,13 +17,22 @@ const ENTRIES_INITIAL_STATE: EntriesState = {
 
 export const EntriesProvider: FC<Props> = ({ children }) => {
   const [state, dispatch] = useReducer(entriesReducer, ENTRIES_INITIAL_STATE)
+  const { enqueueSnackbar } = useSnackbar()
 
   const addNewEntry = async (description: string) => {
     const { data } = await entriesApi.post<Entry>('/entries', { description })
     dispatch({ type: '[Entry] - Add Entry', payload: data })
+    enqueueSnackbar('Entry Added', {
+      variant: 'success',
+      autoHideDuration: 1500,
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'right',
+      },
+    })
   }
 
-  const updateEntry = async ({ _id, description, status }: Entry) => {
+  const updateEntry = async ({ _id, description, status }: Entry, showSnackbar: boolean = false) => {
     try {
       // We can send the full entry, but if the object is really big, we can
       // overload the connection sending unnecessary data.
@@ -31,6 +41,16 @@ export const EntriesProvider: FC<Props> = ({ children }) => {
         status,
       })
       dispatch({ type: '[Entry] - Entry Updated', payload: data })
+      if (showSnackbar) {
+        enqueueSnackbar('Entry Updated', {
+          variant: 'success',
+          autoHideDuration: 1500,
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: 'right',
+          },
+        })
+      }
     } catch (error) {
       console.log({ error })
     }

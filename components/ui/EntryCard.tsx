@@ -1,4 +1,5 @@
 import { FC, DragEvent, useContext } from 'react'
+import { useRouter } from 'next/router'
 import { Card, CardActions, CardActionArea, CardContent, Typography } from '@mui/material'
 
 import { Entry } from 'interfaces'
@@ -9,6 +10,8 @@ interface Props {
 }
 export const EntryCard: FC<Props> = ({ entry }) => {
   const { startDragging, endDragging } = useContext(UIContext)
+  const router = useRouter()
+
   const onDragStart = (event: DragEvent) => {
     // We can set the data to transfer
     event.dataTransfer.setData('entry_id', entry._id)
@@ -19,8 +22,11 @@ export const EntryCard: FC<Props> = ({ entry }) => {
     // TODO: End of Drag
     endDragging()
   }
+  const onClick = () => {
+    router.push(`/entries/${entry._id}`)
+  }
   return (
-    <Card sx={{ marginBottom: 1 }} draggable onDragStart={onDragStart} onDragEnd={onDragEnd}>
+    <Card onClick={onClick} sx={{ marginBottom: 1 }} draggable onDragStart={onDragStart} onDragEnd={onDragEnd}>
       <CardActionArea>
         <CardContent>
           <Typography sx={{ whiteSpace: 'pre-line' }}>{entry.description}</Typography>

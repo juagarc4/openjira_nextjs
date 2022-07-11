@@ -1,7 +1,6 @@
-import { ChangeEvent, FC, useMemo, useState } from 'react'
+import { ChangeEvent, FC, useMemo, useState, useContext } from 'react'
+import { useRouter } from 'next/router'
 import { GetServerSideProps } from 'next'
-
-import { Layout } from 'components/layouts'
 import {
   capitalize,
   Button,
@@ -20,18 +19,23 @@ import {
 } from '@mui/material'
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
-import { EntryStatus } from 'interfaces'
-import mongoose from 'mongoose';
+import { Layout } from 'components/layouts'
+import { dbEntries } from 'database'
+import { Entry, EntryStatus } from 'interfaces'
+import { EntriesContext } from 'context/entries'
 
 const validStauts: EntryStatus[] = ['pending', 'in-progress', 'finished']
 
-interface Props {}
+interface Props {
+  entry: Entry
+}
 
+const EntryPage: FC<Props> = ({ entry }) => {
+  const router = useRouter()
+  const { updateEntry } = useContext(EntriesContext)
 
-const EntryPage: FC<Props> = (props) => {
-  console.log(props)
-  const [inputValue, setInputValue] = useState('')
-  const [status, setStatus] = useState<EntryStatus>('pending')
+  const [inputValue, setInputValue] = useState(entry.description)
+  const [status, setStatus] = useState<EntryStatus>(entry.status)
   const [touched, setTouched] = useState(false)
 
   // We memoize the result to avoid multiple executions of the same validation.
@@ -48,13 +52,23 @@ const EntryPage: FC<Props> = (props) => {
     setStatus(event.target.value as EntryStatus)
   }
 
-  const onSave = () => {}
+  const onSave = () => {
+    if (inputValue.trim().length === 0) return
+    const updatedEntry: Entry = {
+      ...entry,
+      status,
+      description: inputValue,
+    }
+
+    updateEntry(updatedEntry, true )
+    router.push('/')
+  }
   return (
-    <Layout title='....'>
+    <Layout title='Add/Edit entry'>
       <Grid container justifyContent='center' sx={{ marginTop: 2 }}>
         <Grid item xs={12} sm={8} md={6}>
           <Card>
-            <CardHeader title={`Entry: ${inputValue}`} subheader={'Created: .... minutes ago'} />
+            <CardHeader title={`Entry: ${inputValue}`} subheader={`Created: ${entry.createdAt} minutes ago`} />
             <CardContent>
               <TextField
                 sx={{ marginTop: 2, marginBottom: 1 }}
@@ -106,16 +120,18 @@ const EntryPage: FC<Props> = (props) => {
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const { id } = params as { id: string }
 
-  if (!mongoose.isValidObjectId(id)) {
+  const entry = await dbEntries.getEntryById(id)
+
+  if (!entry) {
     return {
       redirect: {
         destination: '/',
-        permanent: false
-      }
+        permanent: false,
+      },
     }
   }
   return {
-    props: { id },
+    props: { entry },
   }
 }
 
