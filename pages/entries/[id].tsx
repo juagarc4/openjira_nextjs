@@ -23,6 +23,7 @@ import { Layout } from 'components/layouts'
 import { dbEntries } from 'database'
 import { Entry, EntryStatus } from 'interfaces'
 import { EntriesContext } from 'context/entries'
+import { dateFunctions } from 'utils'
 
 const validStauts: EntryStatus[] = ['pending', 'in-progress', 'finished']
 
@@ -60,7 +61,7 @@ const EntryPage: FC<Props> = ({ entry }) => {
       description: inputValue,
     }
 
-    updateEntry(updatedEntry, true )
+    updateEntry(updatedEntry, true)
     router.push('/')
   }
   return (
@@ -68,7 +69,10 @@ const EntryPage: FC<Props> = ({ entry }) => {
       <Grid container justifyContent='center' sx={{ marginTop: 2 }}>
         <Grid item xs={12} sm={8} md={6}>
           <Card>
-            <CardHeader title={`Entry: ${inputValue}`} subheader={`Created: ${entry.createdAt} minutes ago`} />
+            <CardHeader
+              title={`Entry: ${inputValue}`}
+              subheader={`Created ${dateFunctions.getFormatDistanceToNow(entry.createdAt)} ago`}
+            />
             <CardContent>
               <TextField
                 sx={{ marginTop: 2, marginBottom: 1 }}
