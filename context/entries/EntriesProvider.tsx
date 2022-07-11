@@ -32,6 +32,19 @@ export const EntriesProvider: FC<Props> = ({ children }) => {
     })
   }
 
+  const deleteEntry = async (id: string) => {
+    await entriesApi.delete(`/entries/${id}`)
+    dispatch({ type: '[Entry] - Delete Entry', payload: id })
+    enqueueSnackbar('Entry deleted', {
+      variant: 'success',
+      autoHideDuration: 1500,
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'right',
+      },
+    })
+  }
+
   const updateEntry = async ({ _id, description, status }: Entry, showSnackbar: boolean = false) => {
     try {
       // We can send the full entry, but if the object is really big, we can
@@ -75,6 +88,7 @@ export const EntriesProvider: FC<Props> = ({ children }) => {
       value={{
         ...state,
         addNewEntry,
+        deleteEntry,
         updateEntry,
       }}
     >

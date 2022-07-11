@@ -33,7 +33,7 @@ interface Props {
 
 const EntryPage: FC<Props> = ({ entry }) => {
   const router = useRouter()
-  const { updateEntry } = useContext(EntriesContext)
+  const { updateEntry, deleteEntry } = useContext(EntriesContext)
 
   const [inputValue, setInputValue] = useState(entry.description)
   const [status, setStatus] = useState<EntryStatus>(entry.status)
@@ -64,6 +64,12 @@ const EntryPage: FC<Props> = ({ entry }) => {
     updateEntry(updatedEntry, true)
     router.push('/')
   }
+
+  const onDelete = () => {
+    deleteEntry(entry._id)
+    router.push('/')
+  }
+
   return (
     <Layout title='Add/Edit entry'>
       <Grid container justifyContent='center' sx={{ marginTop: 2 }}>
@@ -111,7 +117,7 @@ const EntryPage: FC<Props> = ({ entry }) => {
           </Card>
         </Grid>
       </Grid>
-      <IconButton sx={{ position: 'fixed', bottom: 30, right: 30, backgroundColor: 'red' }}>
+      <IconButton onClick={onDelete} sx={{ position: 'fixed', bottom: 30, right: 30, backgroundColor: 'red' }}>
         <DeleteOutlinedIcon />
       </IconButton>
     </Layout>
