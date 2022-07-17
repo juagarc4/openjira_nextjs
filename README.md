@@ -8,15 +8,15 @@ docker-compose up -d
 
 - -d means **detached**
 
-* MogoDB URL local
+## Configure env vars
+
+Rename **.env.dist** to **.env** and fill the values
+
+- MogoDB URL local
 
 ```
 mongodb://localhost:27017/openjiradb
 ```
-
-## Configure env vars
-
-Rename **.env.dist** to **.env** and fill the values
 
 # Install needed dependencies and start next in dev mode
 
